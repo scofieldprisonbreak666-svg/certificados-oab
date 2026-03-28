@@ -21,10 +21,14 @@
       font-family: 'DM Sans', sans-serif;
       background: var(--bg);
       min-height: 100vh;
-      padding: 24px 16px 40px;
+      padding: clamp(12px, 4vw, 24px) clamp(12px, 4vw, 16px) 40px;
     }
 
-    .wrapper { max-width: 600px; margin: 0 auto; }
+    .wrapper {
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
 
     .topo {
       background: var(--azul);
@@ -163,6 +167,42 @@
     .radio-opcao span:hover {
       border-color: var(--azul);
       background: #f0f4ff;
+    }
+
+    /* ─── DATA CUSTOMIZADA ─── */
+    .data-grupo {
+      display: grid;
+      grid-template-columns: 2fr 2.5fr 2fr;
+      gap: 8px;
+    }
+
+    .data-grupo select {
+      padding: 12px 10px;
+      font-size: 15px;
+      text-align: center;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 28px;
+    }
+
+    .data-label {
+      font-size: 10px;
+      color: #aaa;
+      text-align: center;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .data-slot { display: flex; flex-direction: column; }
+
+    @media (max-width: 360px) {
+      .data-grupo { grid-template-columns: 1fr 1.5fr 1fr; gap: 6px; }
+      .data-grupo select { font-size: 13px; padding: 11px 6px; padding-right: 22px; }
     }
 
     button#btn {
@@ -425,7 +465,38 @@
 
       <div class="campo">
         <label>Data do evento <span>*</span></label>
-        <input type="date" id="data_evento">
+        <div class="data-grupo">
+          <div class="data-slot">
+            <select id="data-dia">
+              <option value="">Dia</option>
+            </select>
+            <div class="data-label">Dia</div>
+          </div>
+          <div class="data-slot">
+            <select id="data-mes">
+              <option value="">Mês</option>
+              <option value="01">Janeiro</option>
+              <option value="02">Fevereiro</option>
+              <option value="03">Março</option>
+              <option value="04">Abril</option>
+              <option value="05">Maio</option>
+              <option value="06">Junho</option>
+              <option value="07">Julho</option>
+              <option value="08">Agosto</option>
+              <option value="09">Setembro</option>
+              <option value="10">Outubro</option>
+              <option value="11">Novembro</option>
+              <option value="12">Dezembro</option>
+            </select>
+            <div class="data-label">Mês</div>
+          </div>
+          <div class="data-slot">
+            <select id="data-ano">
+              <option value="">Ano</option>
+            </select>
+            <div class="data-label">Ano</div>
+          </div>
+        </div>
       </div>
 
       <button id="btn" onclick="enviar()">Enviar solicitação</button>
@@ -463,6 +534,25 @@
     const SUPABASE_KEY = 'sb_publishable_5CaB6jJ_0w-7UxQyXTgXXg_DczjvJTp'
     const { createClient } = supabase
     const db = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+    // Popula dias
+    const selDia = document.getElementById('data-dia')
+    for (let d = 1; d <= 31; d++) {
+      const o = document.createElement('option')
+      o.value = String(d).padStart(2, '0')
+      o.textContent = String(d).padStart(2, '0')
+      selDia.appendChild(o)
+    }
+
+    // Popula anos (2023 até ano atual)
+    const selAno = document.getElementById('data-ano')
+    const anoAtual = new Date().getFullYear()
+    for (let a = anoAtual; a >= 2023; a--) {
+      const o = document.createElement('option')
+      o.value = a
+      o.textContent = a
+      selAno.appendChild(o)
+    }
 
     document.getElementById('evento').addEventListener('change', function() {
       document.getElementById('evento_outro').style.display =
@@ -507,7 +597,10 @@
       const evento = eventoSelect === 'Outro' ? eventoOutro : eventoSelect
       const formato = document.querySelector('input[name="formato"]:checked')?.value
       const categoria = document.querySelector('input[name="categoria"]:checked')?.value
-      const data_evento = document.getElementById('data_evento').value
+      const dia = document.getElementById('data-dia').value
+      const mes = document.getElementById('data-mes').value
+      const ano = document.getElementById('data-ano').value
+      const data_evento = (dia && mes && ano) ? `${ano}-${mes}-${dia}` : ''
 
       const erro = document.getElementById('erro')
       erro.style.display = 'none'
