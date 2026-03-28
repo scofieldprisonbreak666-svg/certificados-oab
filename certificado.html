@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Solicitação de Certificado - OAB</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: sans-serif;
+      background: #f0f2f5;
+      padding: 40px 20px;
+    }
+
+    .topo {
+      background: #1a3a5c;
+      color: white;
+      text-align: center;
+      padding: 24px;
+      border-radius: 12px 12px 0 0;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .topo h1 { font-size: 20px; }
+    .topo p { font-size: 13px; margin-top: 4px; opacity: 0.8; }
+
+    .avisos {
+      background: #fff8e1;
+      border-left: 4px solid #f9a825;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 16px 20px;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.8;
+    }
+
+    .card {
+      background: white;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 32px;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    .campo { margin-bottom: 20px; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    label span { color: red; }
+
+    input, select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #333;
+      background: #fafafa;
+      transition: border 0.2s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #1a3a5c;
+      background: white;
+    }
+
+    .radio-grupo { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+
+    .radio-opcao {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .radio-opcao:has(input:checked) {
+      background: #e8f0fe;
+      border-color: #1a3a5c;
+      color: #1a3a5c;
+      font-weight: 600;
+    }
+
+    .radio-opcao input { width: auto; }
+
+    button {
+      width: 100%;
+      background: #1a3a5c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    button:hover { background: #0f2540; }
+    button:disabled { background: #aaa; cursor: not-allowed; }
+
+    .sucesso {
+      display: none;
+      background: #e8f5e9;
+      border: 1px solid #a5d6a7;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      color: #2e7d32;
+      margin-top: 20px;
+      font-size: 15px;
+    }
+
+    .erro {
+      display: none;
+      background: #ffebee;
+      border: 1px solid #ef9a9a;
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: #c62828;
+      margin-top: 12px;
+      font-size: 13px;
+    }
+
+    .admin-link {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 13px;
+    }
+
+    .admin-link a { color: #1a3a5c; }
+  </style>
+</head>
+<body>
+
+  <div class="topo">
+    <h1>🏛️ OAB — Solicitação de Certificado</h1>
+    <p>Solicitação de Certificado · 2026</p>
+  </div>
+
+  <div class="avisos">
+    ⚠️ <strong>Preencha todos os campos com cuidado para evitar erros na emissão.</strong><br>
+    ✅ Uma solicitação por vez.<br>
+    ✅ O certificado será enviado apenas para quem assinou a lista de presença.<br>
+    ✅ Prazo de envio: <strong>15 a 20 dias úteis</strong> via e-mail.<br>
+    ✅ Verifique o Spam caso não receba no prazo.<br>
+    ✅ Dúvidas? WhatsApp: <strong>(17) 98828-6756</strong>
+  </div>
+
+  <div class="card">
+
+    <div class="campo">
+      <label>E-mail <span>*</span></label>
+      <input type="email" id="email" placeholder="seu@email.com">
+    </div>
+
+    <div class="campo">
+      <label>Nome completo <span>*</span></label>
+      <input type="text" id="nome" placeholder="Digite seu nome completo">
+    </div>
+
+    <div class="campo">
+      <label>Telefone (WhatsApp) <span>*</span></label>
+      <input type="text" id="telefone" placeholder="(00) 00000-0000">
+    </div>
+
+    <div class="campo">
+      <label>Evento <span>*</span></label>
+      <select id="evento">
+        <option value="">Selecione o evento</option>
+        <option>II CONGRESSO DE FRANCHISING</option>
+        <option>Outro</option>
+      </select>
+      <input type="text" id="evento_outro" placeholder="Nome do evento" style="margin-top:8px; display:none;">
+    </div>
+
+    <div class="campo">
+      <label>Formato <span>*</span></label>
+      <div class="radio-grupo">
+        <label class="radio-opcao"><input type="radio" name="formato" value="PRESENCIAL"> Presencial</label>
+        <label class="radio-opcao"><input type="radio" name="formato" value="ONLINE"> Online</label>
+        <label class="radio-opcao"><input type="radio" name="formato" value="HÍBRIDO"> Híbrido</label>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label>Categoria <span>*</span></label>
+      <div class="radio-grupo">
+        <label class="radio-opcao"><input type="radio" name="categoria" value="PALESTRANTE"> Palestrante</label>
+        <label class="radio-opcao"><input type="radio" name="categoria" value="CONGRESSISTA"> Congressista</label>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label>Data do evento <span>*</span></label>
+      <input type="date" id="data_evento">
+    </div>
+
+    <button id="btn" onclick="enviar()">Enviar solicitação</button>
+    <div class="erro" id="erro"></div>
+    <div class="sucesso" id="sucesso">
+      ✅ Solicitação enviada com sucesso!<br>
+      <small>Você receberá o certificado em até 20 dias úteis no e-mail informado.</small>
+    </div>
+
+  </div>
+
+  <div class="admin-link">
+    <a href="admin.html">Área administrativa →</a>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://kljjztrlojnckaibbcug.supabase.co'
+    const SUPABASE_KEY = 'sb_publishable_5CaB6jJ_0w-7UxQyXTgXXg_DczjvJTp'
+    const { createClient } = supabase
+    const db = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+    document.getElementById('evento').addEventListener('change', function() {
+      document.getElementById('evento_outro').style.display =
+        this.value === 'Outro' ? 'block' : 'none'
+    })
+
+    async function enviar() {
+      const email = document.getElementById('email').value.trim()
+      const nome = document.getElementById('nome').value.trim()
+      const telefone = document.getElementById('telefone').value.trim()
+      const eventoSelect = document.getElementById('evento').value
+      const eventoOutro = document.getElementById('evento_outro').value.trim()
+      const evento = eventoSelect === 'Outro' ? eventoOutro : eventoSelect
+      const formato = document.querySelector('input[name="formato"]:checked')?.value
+      const categoria = document.querySelector('input[name="categoria"]:checked')?.value
+      const data_evento = document.getElementById('data_evento').value
+
+      const erro = document.getElementById('erro')
+      erro.style.display = 'none'
+
+      if (!email || !nome || !telefone || !evento || !formato || !categoria || !data_evento) {
+        erro.textContent = '⚠️ Preencha todos os campos obrigatórios.'
+        erro.style.display = 'block'
+        return
+      }
+
+      const btn = document.getElementById('btn')
+      btn.disabled = true
+      btn.textContent = 'Enviando...'
+
+      const { error } = await db.from('certificados').insert({
+        email, nome, telefone, evento, formato, categoria, data_evento
+      })
+
+      if (error) {
+        erro.textContent = '❌ Erro ao enviar. Tente novamente.'
+        erro.style.display = 'block'
+        btn.disabled = false
+        btn.textContent = 'Enviar solicitação'
+      } else {
+        document.getElementById('sucesso').style.display = 'block'
+        btn.style.display = 'none'
+      }
+    }
+  </script>
+
+</body>
+</html>

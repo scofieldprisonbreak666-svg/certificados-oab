@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - OAB Certificados</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: sans-serif;
+      background: #f0f2f5;
+      padding: 40px 20px;
+    }
+
+    .topo {
+      background: #1a3a5c;
+      color: white;
+      padding: 20px 32px;
+      border-radius: 12px 12px 0 0;
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .topo h1 { font-size: 18px; }
+
+    .topo span {
+      font-size: 13px;
+      background: rgba(255,255,255,0.15);
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    .card {
+      background: white;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 24px 32px;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    .filtros {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .filtros input, .filtros select {
+      padding: 8px 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 13px;
+      background: #fafafa;
+    }
+
+    .filtros input { flex: 1; min-width: 180px; }
+
+    .stats {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      background: #f5f7fa;
+      border-radius: 10px;
+      padding: 14px 20px;
+      flex: 1;
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 28px;
+      color: #1a3a5c;
+    }
+
+    .stat span { font-size: 12px; color: #888; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      text-align: left;
+      padding: 10px 12px;
+      background: #f5f7fa;
+      color: #555;
+      font-weight: 600;
+      border-bottom: 1px solid #eee;
+    }
+
+    td {
+      padding: 12px 12px;
+      border-bottom: 1px solid #f0f0f0;
+      color: #333;
+      vertical-align: middle;
+    }
+
+    tr:hover td { background: #fafafa; }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge.pendente { background: #fff8e1; color: #f9a825; }
+    .badge.emitido { background: #e8f5e9; color: #2e7d32; }
+
+    .btn-status {
+      background: none;
+      border: 1px solid #1a3a5c;
+      color: #1a3a5c;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-status:hover { background: #1a3a5c; color: white; }
+
+    .vazio {
+      text-align: center;
+      padding: 40px;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .voltar {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 13px;
+    }
+
+    .voltar a { color: #1a3a5c; }
+  </style>
+</head>
+<body>
+
+  <div class="topo">
+    <h1>🏛️ OAB — Painel Administrativo</h1>
+    <span id="total-topo">Carregando...</span>
+  </div>
+
+  <div class="card">
+
+    <div class="stats">
+      <div class="stat">
+        <strong id="s-total">-</strong>
+        <span>Total</span>
+      </div>
+      <div class="stat">
+        <strong id="s-pendente">-</strong>
+        <span>Pendentes</span>
+      </div>
+      <div class="stat">
+        <strong id="s-emitido">-</strong>
+        <span>Emitidos</span>
+      </div>
+    </div>
+
+    <div class="filtros">
+      <input type="text" id="busca" placeholder="🔍 Buscar por nome ou e-mail..." oninput="filtrar()">
+      <select id="filtro-status" onchange="filtrar()">
+        <option value="">Todos os status</option>
+        <option value="pendente">Pendente</option>
+        <option value="emitido">Emitido</option>
+      </select>
+      <select id="filtro-categoria" onchange="filtrar()">
+        <option value="">Todas as categorias</option>
+        <option value="PALESTRANTE">Palestrante</option>
+        <option value="CONGRESSISTA">Congressista</option>
+      </select>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Telefone</th>
+          <th>Evento</th>
+          <th>Formato</th>
+          <th>Categoria</th>
+          <th>Data</th>
+          <th>Status</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody id="tabela"></tbody>
+    </table>
+
+    <div class="vazio" id="vazio" style="display:none">Nenhuma solicitação encontrada.</div>
+
+  </div>
+
+  <div class="voltar">
+    <a href="certificado.html">← Voltar ao formulário</a>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://kljjztrlojnckaibbcug.supabase.co'
+    const SUPABASE_KEY = 'sb_publishable_5CaB6jJ_0w-7UxQyXTgXXg_DczjvJTp'
+    const { createClient } = supabase
+    const db = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+    let todos = []
+
+    async function carregar() {
+      const { data } = await db
+        .from('certificados')
+        .select('*')
+        .order('criado_em', { ascending: false })
+
+      todos = data || []
+      atualizarStats()
+      renderizar(todos)
+    }
+
+    function atualizarStats() {
+      const pendentes = todos.filter(r => r.status === 'pendente').length
+      const emitidos = todos.filter(r => r.status === 'emitido').length
+      document.getElementById('s-total').textContent = todos.length
+      document.getElementById('s-pendente').textContent = pendentes
+      document.getElementById('s-emitido').textContent = emitidos
+      document.getElementById('total-topo').textContent = todos.length + ' solicitações'
+    }
+
+    function filtrar() {
+      const busca = document.getElementById('busca').value.toLowerCase()
+      const status = document.getElementById('filtro-status').value
+      const categoria = document.getElementById('filtro-categoria').value
+
+      const filtrados = todos.filter(r => {
+        const textoBate = r.nome.toLowerCase().includes(busca) || r.email.toLowerCase().includes(busca)
+        const statusBate = !status || r.status === status
+        const categoriaBate = !categoria || r.categoria === categoria
+        return textoBate && statusBate && categoriaBate
+      })
+
+      renderizar(filtrados)
+    }
+
+    function renderizar(lista) {
+      const tbody = document.getElementById('tabela')
+      const vazio = document.getElementById('vazio')
+
+      if (lista.length === 0) {
+        tbody.innerHTML = ''
+        vazio.style.display = 'block'
+        return
+      }
+
+      vazio.style.display = 'none'
+      tbody.innerHTML = lista.map(r => `
+        <tr>
+          <td>${r.nome}</td>
+          <td>${r.email}</td>
+          <td>${r.telefone}</td>
+          <td>${r.evento}</td>
+          <td>${r.formato}</td>
+          <td>${r.categoria}</td>
+          <td>${r.data_evento}</td>
+          <td><span class="badge ${r.status}">${r.status}</span></td>
+          <td>
+            <button class="btn-status" onclick="alterarStatus('${r.id}', '${r.status}')">
+              ${r.status === 'pendente' ? 'Marcar emitido' : 'Reverter'}
+            </button>
+          </td>
+        </tr>
+      `).join('')
+    }
+
+    async function alterarStatus(id, statusAtual) {
+      const novoStatus = statusAtual === 'pendente' ? 'emitido' : 'pendente'
+      await db.from('certificados').update({ status: novoStatus }).eq('id', id)
+      carregar()
+    }
+
+    carregar()
+
+    // Atualiza em tempo real
+    db.channel('certificados')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'certificados' },
+        () => carregar()
+      ).subscribe()
+  </script>
+
+</body>
+</html>
