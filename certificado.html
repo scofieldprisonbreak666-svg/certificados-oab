@@ -2,6 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Solicitação de Certificado - OAB</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -10,43 +11,43 @@
     body {
       font-family: sans-serif;
       background: #f0f2f5;
-      padding: 40px 20px;
+      min-height: 100vh;
+      padding: 24px 16px;
+    }
+
+    .wrapper {
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     .topo {
       background: #1a3a5c;
       color: white;
       text-align: center;
-      padding: 24px;
+      padding: 20px 16px;
       border-radius: 12px 12px 0 0;
-      max-width: 600px;
-      margin: 0 auto;
     }
 
-    .topo h1 { font-size: 20px; }
+    .topo h1 { font-size: clamp(16px, 4vw, 22px); }
     .topo p { font-size: 13px; margin-top: 4px; opacity: 0.8; }
 
     .avisos {
       background: #fff8e1;
       border-left: 4px solid #f9a825;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 16px 20px;
+      padding: 14px 16px;
       font-size: 13px;
       color: #555;
-      line-height: 1.8;
+      line-height: 1.9;
     }
 
     .card {
       background: white;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 32px;
+      padding: 24px 20px;
       border-radius: 0 0 12px 12px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     }
 
-    .campo { margin-bottom: 20px; }
+    .campo { margin-bottom: 18px; }
 
     label {
       display: block;
@@ -60,13 +61,14 @@
 
     input, select {
       width: 100%;
-      padding: 10px 14px;
+      padding: 11px 14px;
       border: 1px solid #ddd;
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 15px;
       color: #333;
       background: #fafafa;
       transition: border 0.2s;
+      -webkit-appearance: none;
     }
 
     input:focus, select:focus {
@@ -75,7 +77,12 @@
       background: white;
     }
 
-    .radio-grupo { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+    .radio-grupo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
 
     .radio-opcao {
       display: flex;
@@ -84,10 +91,13 @@
       background: #f5f5f5;
       border: 1px solid #ddd;
       border-radius: 8px;
-      padding: 8px 16px;
+      padding: 10px 14px;
       cursor: pointer;
       font-size: 14px;
       transition: all 0.2s;
+      flex: 1;
+      min-width: 100px;
+      justify-content: center;
     }
 
     .radio-opcao:has(input:checked) {
@@ -97,7 +107,7 @@
       font-weight: 600;
     }
 
-    .radio-opcao input { width: auto; }
+    .radio-opcao input { width: auto; flex: none; }
 
     button {
       width: 100%;
@@ -126,6 +136,7 @@
       color: #2e7d32;
       margin-top: 20px;
       font-size: 15px;
+      line-height: 1.6;
     }
 
     .erro {
@@ -139,91 +150,91 @@
       font-size: 13px;
     }
 
-    .admin-link {
+    .rodape {
       text-align: center;
       margin-top: 16px;
-      font-size: 13px;
+      font-size: 12px;
+      color: #aaa;
     }
-
-    .admin-link a { color: #1a3a5c; }
   </style>
 </head>
 <body>
+  <div class="wrapper">
 
-  <div class="topo">
-    <h1>🏛️ OAB — Solicitação de Certificado</h1>
-    <p>Solicitação de Certificado · 2026</p>
-  </div>
-
-  <div class="avisos">
-    ⚠️ <strong>Preencha todos os campos com cuidado para evitar erros na emissão.</strong><br>
-    ✅ Uma solicitação por vez.<br>
-    ✅ O certificado será enviado apenas para quem assinou a lista de presença.<br>
-    ✅ Prazo de envio: <strong>15 a 20 dias úteis</strong> via e-mail.<br>
-    ✅ Verifique o Spam caso não receba no prazo.<br>
-    ✅ Dúvidas? WhatsApp: <strong>(17) 98828-6756</strong>
-  </div>
-
-  <div class="card">
-
-    <div class="campo">
-      <label>E-mail <span>*</span></label>
-      <input type="email" id="email" placeholder="seu@email.com">
+    <div class="topo">
+      <h1>🏛️ OAB — Solicitação de Certificado</h1>
+      <p>Solicitação de Certificado · 2026</p>
     </div>
 
-    <div class="campo">
-      <label>Nome completo <span>*</span></label>
-      <input type="text" id="nome" placeholder="Digite seu nome completo">
+    <div class="avisos">
+      ⚠️ <strong>Preencha todos os campos com cuidado.</strong><br>
+      ✅ Uma solicitação por vez.<br>
+      ✅ Apenas para quem assinou a lista de presença.<br>
+      ✅ Prazo: <strong>15 a 20 dias úteis</strong> via e-mail.<br>
+      ✅ Verifique o Spam caso não receba.<br>
+      ✅ Dúvidas? WhatsApp: <strong>(17) 98828-6756</strong>
     </div>
 
-    <div class="campo">
-      <label>Telefone (WhatsApp) <span>*</span></label>
-      <input type="text" id="telefone" placeholder="(00) 00000-0000">
-    </div>
+    <div class="card">
 
-    <div class="campo">
-      <label>Evento <span>*</span></label>
-      <select id="evento">
-        <option value="">Selecione o evento</option>
-        <option>II CONGRESSO DE FRANCHISING</option>
-        <option>Outro</option>
-      </select>
-      <input type="text" id="evento_outro" placeholder="Nome do evento" style="margin-top:8px; display:none;">
-    </div>
-
-    <div class="campo">
-      <label>Formato <span>*</span></label>
-      <div class="radio-grupo">
-        <label class="radio-opcao"><input type="radio" name="formato" value="PRESENCIAL"> Presencial</label>
-        <label class="radio-opcao"><input type="radio" name="formato" value="ONLINE"> Online</label>
-        <label class="radio-opcao"><input type="radio" name="formato" value="HÍBRIDO"> Híbrido</label>
+      <div class="campo">
+        <label>E-mail <span>*</span></label>
+        <input type="email" id="email" placeholder="seu@email.com">
       </div>
-    </div>
 
-    <div class="campo">
-      <label>Categoria <span>*</span></label>
-      <div class="radio-grupo">
-        <label class="radio-opcao"><input type="radio" name="categoria" value="PALESTRANTE"> Palestrante</label>
-        <label class="radio-opcao"><input type="radio" name="categoria" value="CONGRESSISTA"> Congressista</label>
+      <div class="campo">
+        <label>Nome completo <span>*</span></label>
+        <input type="text" id="nome" placeholder="Digite seu nome completo">
       </div>
+
+      <div class="campo">
+        <label>Telefone (WhatsApp) <span>*</span></label>
+        <input type="tel" id="telefone" placeholder="(00) 00000-0000">
+      </div>
+
+      <div class="campo">
+        <label>Evento <span>*</span></label>
+        <select id="evento">
+          <option value="">Selecione o evento</option>
+          <option>II CONGRESSO DE FRANCHISING</option>
+          <option>Outro</option>
+        </select>
+        <input type="text" id="evento_outro" placeholder="Nome do evento" style="margin-top:8px; display:none;">
+      </div>
+
+      <div class="campo">
+        <label>Formato <span>*</span></label>
+        <div class="radio-grupo">
+          <label class="radio-opcao"><input type="radio" name="formato" value="PRESENCIAL"> Presencial</label>
+          <label class="radio-opcao"><input type="radio" name="formato" value="ONLINE"> Online</label>
+          <label class="radio-opcao"><input type="radio" name="formato" value="HÍBRIDO"> Híbrido</label>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Categoria <span>*</span></label>
+        <div class="radio-grupo">
+          <label class="radio-opcao"><input type="radio" name="categoria" value="PALESTRANTE"> Palestrante</label>
+          <label class="radio-opcao"><input type="radio" name="categoria" value="CONGRESSISTA"> Congressista</label>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Data do evento <span>*</span></label>
+        <input type="date" id="data_evento">
+      </div>
+
+      <button id="btn" onclick="enviar()">Enviar solicitação</button>
+      <div class="erro" id="erro"></div>
+      <div class="sucesso" id="sucesso">
+        ✅ Solicitação enviada com sucesso!<br>
+        <small>Você receberá o certificado em até 20 dias úteis no e-mail informado.</small>
+      </div>
+
     </div>
 
-    <div class="campo">
-      <label>Data do evento <span>*</span></label>
-      <input type="date" id="data_evento">
-    </div>
+    <div class="rodape">OAB · 2026</div>
 
-    <button id="btn" onclick="enviar()">Enviar solicitação</button>
-    <div class="erro" id="erro"></div>
-    <div class="sucesso" id="sucesso">
-      ✅ Solicitação enviada com sucesso!<br>
-      <small>Você receberá o certificado em até 20 dias úteis no e-mail informado.</small>
-    </div>
-
-  </div>
-
-  <div class="admin-link">
-    <a href="admin.html">Área administrativa →</a>
   </div>
 
   <script>
