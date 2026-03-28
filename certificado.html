@@ -358,20 +358,52 @@
       margin-bottom: 20px;
     }
 
+    .popup-acoes {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
     .popup-btn {
       background: var(--azul);
       color: white;
       border: none;
       border-radius: 10px;
-      padding: 13px 32px;
+      padding: 13px 24px;
       font-size: 14px;
       font-family: 'DM Sans', sans-serif;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.2s;
+      flex: 1;
+      min-width: 130px;
     }
 
     .popup-btn:hover { background: var(--azul-escuro); }
+
+    .popup-btn-secundario {
+      background: white;
+      color: var(--azul);
+      border: 1.5px solid var(--azul);
+    }
+
+    .popup-btn-secundario:hover {
+      background: var(--azul-claro);
+    }
+
+    .confirmacao-final {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      background: #e8f5e9;
+      border: 1px solid #a5d6a7;
+      border-radius: 12px;
+      color: #2e7d32;
+      font-size: 15px;
+      line-height: 1.7;
+      margin-top: 16px;
+    }
 
     .confetti-piece {
       position: fixed;
@@ -511,6 +543,10 @@
 
       <button id="btn" onclick="enviar()">Enviar solicitação</button>
       <div class="erro" id="erro"></div>
+      <div class="confirmacao-final" id="confirmacao-final">
+        ✅ <strong>Solicitação enviada com sucesso!</strong><br>
+        <small>Você receberá o certificado em até 20 dias úteis no e-mail informado.</small>
+      </div>
 
     </div>
 
@@ -535,7 +571,10 @@
         <span>📁 Verifique também a pasta de <strong>Spam</strong></span>
         <span>💬 Dúvidas? WhatsApp: <strong>(17) 98828-6756</strong></span>
       </div>
-      <button class="popup-btn" onclick="fecharPopup()">Fechar</button>
+      <div class="popup-acoes">
+        <button class="popup-btn popup-btn-secundario" onclick="novaInscricao()">＋ Nova inscrição</button>
+        <button class="popup-btn" onclick="fecharPopup()">Fechar</button>
+      </div>
     </div>
   </div>
 
@@ -544,6 +583,8 @@
     const SUPABASE_KEY = 'sb_publishable_5CaB6jJ_0w-7UxQyXTgXXg_DczjvJTp'
     const { createClient } = supabase
     const db = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+    let enviando = false // flag anti-duplicata
 
     // Popula dias
     const selDia = document.getElementById('data-dia')
@@ -596,9 +637,44 @@
 
     function fecharPopup() {
       document.getElementById('popup').classList.remove('show')
+      // Mostra mensagem de confirmação no lugar do botão
+      const btn = document.getElementById('btn')
+      btn.style.display = 'none'
+      const confirmacao = document.getElementById('confirmacao-final')
+      confirmacao.style.display = 'block'
+    }
+
+    function novaInscricao() {
+      document.getElementById('popup').classList.remove('show')
+      limparFormulario()
+      // Rola suavemente para o topo do form
+      document.querySelector('.card').scrollIntoView({ behavior: 'smooth' })
+    }
+
+    function limparFormulario() {
+      document.getElementById('email').value = ''
+      document.getElementById('nome').value = ''
+      document.getElementById('telefone').value = ''
+      document.getElementById('evento').value = ''
+      document.getElementById('evento_outro').value = ''
+      document.getElementById('evento_outro').style.display = 'none'
+      document.getElementById('data-dia').value = ''
+      document.getElementById('data-mes').value = ''
+      document.getElementById('data-ano').value = ''
+      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false)
+      document.getElementById('erro').style.display = 'none'
+      const btn = document.getElementById('btn')
+      btn.style.display = 'block'
+      btn.disabled = false
+      btn.textContent = 'Enviar solicitação'
+      document.getElementById('confirmacao-final').style.display = 'none'
+      enviando = false
     }
 
     async function enviar() {
+      if (enviando) return // bloqueia duplo clique
+      enviando = true
+
       const email = document.getElementById('email').value.trim()
       const nome = document.getElementById('nome').value.trim()
       const telefone = document.getElementById('telefone').value.trim()
@@ -618,6 +694,7 @@
       if (!email || !nome || !telefone || !evento || !formato || !categoria || !data_evento) {
         erro.textContent = '⚠️ Preencha todos os campos obrigatórios.'
         erro.style.display = 'block'
+        enviando = false
         return
       }
 
@@ -634,9 +711,9 @@
         erro.style.display = 'block'
         btn.disabled = false
         btn.textContent = 'Enviar solicitação'
+        enviando = false
       } else {
         abrirPopup()
-        btn.style.display = 'none'
       }
     }
   </script>
