@@ -90,9 +90,10 @@
 
     .card {
       background: white;
-      padding: 28px 24px;
+      padding: clamp(16px, 5vw, 28px) clamp(14px, 5vw, 24px);
       border-radius: 0 0 14px 14px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
     }
 
     .campo { margin-bottom: 20px; }
@@ -171,22 +172,33 @@
 
     /* ─── DATA CUSTOMIZADA ─── */
     .data-grupo {
-      display: grid;
-      grid-template-columns: 2fr 2.5fr 2fr;
+      display: flex;
       gap: 8px;
+      width: 100%;
     }
 
+    .data-slot {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .data-slot:nth-child(2) { flex: 1.6; }
+
     .data-grupo select {
-      padding: 12px 10px;
-      font-size: 15px;
+      width: 100%;
+      padding: 12px 8px;
+      font-size: 14px;
       text-align: center;
       cursor: pointer;
       appearance: none;
       -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 10px center;
-      padding-right: 28px;
+      background-position: right 8px center;
+      padding-right: 22px;
+      min-width: 0;
     }
 
     .data-label {
@@ -198,11 +210,9 @@
       letter-spacing: 0.5px;
     }
 
-    .data-slot { display: flex; flex-direction: column; }
-
-    @media (max-width: 360px) {
-      .data-grupo { grid-template-columns: 1fr 1.5fr 1fr; gap: 6px; }
-      .data-grupo select { font-size: 13px; padding: 11px 6px; padding-right: 22px; }
+    @media (max-width: 380px) {
+      .data-grupo { gap: 5px; }
+      .data-grupo select { font-size: 13px; padding: 11px 4px; padding-right: 18px; }
     }
 
     button#btn {
