@@ -24,11 +24,7 @@
       padding: clamp(12px, 4vw, 24px) clamp(12px, 4vw, 16px) 40px;
     }
 
-    .wrapper {
-      max-width: 600px;
-      margin: 0 auto;
-      width: 100%;
-    }
+    .wrapper { max-width: 600px; margin: 0 auto; width: 100%; }
 
     .topo {
       background: var(--azul);
@@ -58,11 +54,7 @@
       background: rgba(255,255,255,0.06);
     }
 
-    .topo-icon {
-      font-size: 36px;
-      margin-bottom: 8px;
-      display: block;
-    }
+    .topo-icon { font-size: 36px; margin-bottom: 8px; display: block; }
 
     .topo h1 {
       font-family: 'Playfair Display', serif;
@@ -70,12 +62,7 @@
       letter-spacing: 0.3px;
     }
 
-    .topo p {
-      font-size: 13px;
-      margin-top: 5px;
-      opacity: 0.7;
-      letter-spacing: 0.5px;
-    }
+    .topo p { font-size: 13px; margin-top: 5px; opacity: 0.7; letter-spacing: 0.5px; }
 
     .avisos {
       background: #fffdf0;
@@ -113,7 +100,6 @@
     input[type="text"],
     input[type="email"],
     input[type="tel"],
-    input[type="date"],
     select {
       width: 100%;
       padding: 12px 15px;
@@ -133,13 +119,7 @@
       box-shadow: 0 0 0 4px rgba(26,58,92,0.08);
     }
 
-    .radio-grupo {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
+    .radio-grupo { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
     .radio-opcao { flex: 1; min-width: 90px; }
     .radio-opcao input[type="radio"] { display: none; }
 
@@ -165,25 +145,12 @@
       font-weight: 600;
     }
 
-    .radio-opcao span:hover {
-      border-color: var(--azul);
-      background: #f0f4ff;
-    }
+    .radio-opcao span:hover { border-color: var(--azul); background: #f0f4ff; }
 
     /* ─── DATA CUSTOMIZADA ─── */
-    .data-grupo {
-      display: flex;
-      gap: 8px;
-      width: 100%;
-    }
+    .data-grupo { display: flex; gap: 8px; width: 100%; }
 
-    .data-slot {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      min-width: 0;
-    }
-
+    .data-slot { display: flex; flex-direction: column; flex: 1; min-width: 0; }
     .data-slot:nth-child(2) { flex: 1.6; }
 
     .data-grupo select {
@@ -202,12 +169,8 @@
     }
 
     .data-label {
-      font-size: 10px;
-      color: #aaa;
-      text-align: center;
-      margin-top: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      font-size: 10px; color: #aaa; text-align: center;
+      margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px;
     }
 
     @media (max-width: 380px) {
@@ -215,6 +178,7 @@
       .data-grupo select { font-size: 13px; padding: 11px 4px; padding-right: 18px; }
     }
 
+    /* ─── BOTÃO ENVIAR ─── */
     button#btn {
       width: 100%;
       background: var(--azul);
@@ -246,7 +210,20 @@
       font-size: 13.5px;
     }
 
-    /* ─── POPUP DE SUCESSO ─── */
+    .confirmacao-final {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      background: #e8f5e9;
+      border: 1px solid #a5d6a7;
+      border-radius: 12px;
+      color: #2e7d32;
+      font-size: 15px;
+      line-height: 1.7;
+      margin-top: 16px;
+    }
+
+    /* ─── POPUP ─── */
     .popup-overlay {
       display: none;
       position: fixed;
@@ -273,11 +250,10 @@
     .popup-box {
       background: white;
       border-radius: 20px;
-      padding: 40px 32px 36px;
+      padding: clamp(24px, 6vw, 40px) clamp(20px, 6vw, 32px) clamp(24px, 6vw, 36px);
       max-width: 420px;
       width: 100%;
       text-align: center;
-      position: relative;
       box-shadow: 0 24px 60px rgba(0,0,0,0.25);
       animation: slideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
@@ -288,8 +264,7 @@
     }
 
     .popup-icone {
-      width: 80px;
-      height: 80px;
+      width: 80px; height: 80px;
       background: linear-gradient(135deg, #1a3a5c, #2a5fa0);
       border-radius: 50%;
       margin: 0 auto 20px;
@@ -317,16 +292,13 @@
 
     .popup-titulo {
       font-family: 'Playfair Display', serif;
-      font-size: 24px;
+      font-size: clamp(20px, 5vw, 24px);
       color: #1a3a5c;
       margin-bottom: 10px;
     }
 
     .popup-subtitulo {
-      font-size: 14.5px;
-      color: #666;
-      line-height: 1.7;
-      margin-bottom: 22px;
+      font-size: 14.5px; color: #666; line-height: 1.7; margin-bottom: 22px;
     }
 
     .popup-info {
@@ -341,9 +313,7 @@
       text-align: left;
     }
 
-    .popup-info span {
-      display: block;
-    }
+    .popup-info span { display: block; }
 
     .popup-badge {
       display: inline-flex;
@@ -366,18 +336,18 @@
     }
 
     .popup-btn {
+      flex: 1;
+      min-width: 120px;
       background: var(--azul);
       color: white;
       border: none;
       border-radius: 10px;
-      padding: 13px 24px;
+      padding: 13px 16px;
       font-size: 14px;
       font-family: 'DM Sans', sans-serif;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.2s;
-      flex: 1;
-      min-width: 130px;
     }
 
     .popup-btn:hover { background: var(--azul-escuro); }
@@ -388,27 +358,10 @@
       border: 1.5px solid var(--azul);
     }
 
-    .popup-btn-secundario:hover {
-      background: var(--azul-claro);
-    }
-
-    .confirmacao-final {
-      display: none;
-      text-align: center;
-      padding: 20px;
-      background: #e8f5e9;
-      border: 1px solid #a5d6a7;
-      border-radius: 12px;
-      color: #2e7d32;
-      font-size: 15px;
-      line-height: 1.7;
-      margin-top: 16px;
-    }
+    .popup-btn-secundario:hover { background: var(--azul-claro); }
 
     .confetti-piece {
       position: fixed;
-      width: 10px;
-      height: 10px;
       border-radius: 2px;
       animation: confettiFall linear forwards;
       pointer-events: none;
@@ -420,12 +373,7 @@
       100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
     }
 
-    .rodape {
-      text-align: center;
-      margin-top: 18px;
-      font-size: 12px;
-      color: #bbb;
-    }
+    .rodape { text-align: center; margin-top: 18px; font-size: 12px; color: #bbb; }
   </style>
 </head>
 <body>
@@ -557,9 +505,7 @@
   <div class="popup-overlay" id="popup">
     <div class="popup-box">
       <div class="popup-icone">✅</div>
-      <div class="popup-badge">
-        <span>●</span> Solicitação registrada
-      </div>
+      <div class="popup-badge"><span>●</span> Solicitação registrada</div>
       <h2 class="popup-titulo">Tudo certo!</h2>
       <p class="popup-subtitulo">
         Sua solicitação foi enviada com sucesso.<br>
@@ -584,7 +530,7 @@
     const { createClient } = supabase
     const db = createClient(SUPABASE_URL, SUPABASE_KEY)
 
-    let enviando = false // flag anti-duplicata
+    let enviando = false
 
     // Popula dias
     const selDia = document.getElementById('data-dia')
@@ -595,7 +541,7 @@
       selDia.appendChild(o)
     }
 
-    // Popula anos (2023 até ano atual)
+    // Popula anos
     const selAno = document.getElementById('data-ano')
     const anoAtual = new Date().getFullYear()
     for (let a = anoAtual; a >= 2023; a--) {
@@ -616,14 +562,12 @@
         const el = document.createElement('div')
         el.className = 'confetti-piece'
         el.style.cssText = `
-          left: ${Math.random() * 100}vw;
-          top: -10px;
-          background: ${cores[Math.floor(Math.random() * cores.length)]};
-          width: ${6 + Math.random() * 8}px;
-          height: ${6 + Math.random() * 8}px;
-          border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
-          animation-duration: ${1.5 + Math.random() * 2}s;
-          animation-delay: ${Math.random() * 0.5}s;
+          left:${Math.random()*100}vw; top:-10px;
+          background:${cores[Math.floor(Math.random()*cores.length)]};
+          width:${6+Math.random()*8}px; height:${6+Math.random()*8}px;
+          border-radius:${Math.random()>0.5?'50%':'2px'};
+          animation-duration:${1.5+Math.random()*2}s;
+          animation-delay:${Math.random()*0.5}s;
         `
         document.body.appendChild(el)
         setTimeout(() => el.remove(), 4000)
@@ -637,21 +581,13 @@
 
     function fecharPopup() {
       document.getElementById('popup').classList.remove('show')
-      // Mostra mensagem de confirmação no lugar do botão
-      const btn = document.getElementById('btn')
-      btn.style.display = 'none'
-      const confirmacao = document.getElementById('confirmacao-final')
-      confirmacao.style.display = 'block'
+      document.getElementById('btn').style.display = 'none'
+      document.getElementById('confirmacao-final').style.display = 'block'
     }
 
     function novaInscricao() {
       document.getElementById('popup').classList.remove('show')
-      limparFormulario()
-      // Rola suavemente para o topo do form
-      document.querySelector('.card').scrollIntoView({ behavior: 'smooth' })
-    }
-
-    function limparFormulario() {
+      // limpa tudo
       document.getElementById('email').value = ''
       document.getElementById('nome').value = ''
       document.getElementById('telefone').value = ''
@@ -663,37 +599,38 @@
       document.getElementById('data-ano').value = ''
       document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false)
       document.getElementById('erro').style.display = 'none'
+      document.getElementById('confirmacao-final').style.display = 'none'
       const btn = document.getElementById('btn')
       btn.style.display = 'block'
       btn.disabled = false
       btn.textContent = 'Enviar solicitação'
-      document.getElementById('confirmacao-final').style.display = 'none'
       enviando = false
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
     async function enviar() {
-      if (enviando) return // bloqueia duplo clique
+      if (enviando) return
       enviando = true
 
-      const email = document.getElementById('email').value.trim()
-      const nome = document.getElementById('nome').value.trim()
+      const email    = document.getElementById('email').value.trim()
+      const nome     = document.getElementById('nome').value.trim()
       const telefone = document.getElementById('telefone').value.trim()
-      const eventoSelect = document.getElementById('evento').value
-      const eventoOutro = document.getElementById('evento_outro').value.trim()
-      const evento = eventoSelect === 'Outro' ? eventoOutro : eventoSelect
-      const formato = document.querySelector('input[name="formato"]:checked')?.value
-      const categoria = document.querySelector('input[name="categoria"]:checked')?.value
-      const dia = document.getElementById('data-dia').value
-      const mes = document.getElementById('data-mes').value
-      const ano = document.getElementById('data-ano').value
+      const evSel    = document.getElementById('evento').value
+      const evOutro  = document.getElementById('evento_outro').value.trim()
+      const evento   = evSel === 'Outro' ? evOutro : evSel
+      const formato  = document.querySelector('input[name="formato"]:checked')?.value
+      const categoria= document.querySelector('input[name="categoria"]:checked')?.value
+      const dia      = document.getElementById('data-dia').value
+      const mes      = document.getElementById('data-mes').value
+      const ano      = document.getElementById('data-ano').value
       const data_evento = (dia && mes && ano) ? `${ano}-${mes}-${dia}` : ''
 
-      const erro = document.getElementById('erro')
-      erro.style.display = 'none'
+      const erroEl = document.getElementById('erro')
+      erroEl.style.display = 'none'
 
       if (!email || !nome || !telefone || !evento || !formato || !categoria || !data_evento) {
-        erro.textContent = '⚠️ Preencha todos os campos obrigatórios.'
-        erro.style.display = 'block'
+        erroEl.textContent = '⚠️ Preencha todos os campos obrigatórios.'
+        erroEl.style.display = 'block'
         enviando = false
         return
       }
@@ -707,8 +644,8 @@
       })
 
       if (error) {
-        erro.textContent = '❌ Erro ao enviar. Tente novamente.'
-        erro.style.display = 'block'
+        erroEl.textContent = '❌ Erro ao enviar. Tente novamente.'
+        erroEl.style.display = 'block'
         btn.disabled = false
         btn.textContent = 'Enviar solicitação'
         enviando = false
