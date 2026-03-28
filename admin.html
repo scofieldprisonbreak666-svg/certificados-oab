@@ -5,69 +5,233 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin - OAB Certificados</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    :root {
+      --azul: #1a3a5c;
+      --azul-escuro: #0f2540;
+      --dourado: #c9a84c;
+      --bg: #f0f2f5;
+    }
+
     body {
-      font-family: sans-serif;
-      background: #f0f2f5;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
       padding: 24px 16px;
     }
 
-    .wrapper {
-      max-width: 1000px;
-      margin: 0 auto;
+    /* ─── TELA DE LOGIN ─── */
+    #tela-login {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      position: fixed;
+      inset: 0;
+      background: #0c1e33;
+      z-index: 999;
     }
 
-    .topo {
-      background: #1a3a5c;
+    .login-box {
+      background: white;
+      border-radius: 20px;
+      padding: 44px 36px 40px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+      animation: loginEntra 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes loginEntra {
+      from { opacity: 0; transform: translateY(30px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .login-logo {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, var(--azul), #2a5fa0);
+      border-radius: 18px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      box-shadow: 0 8px 24px rgba(26,58,92,0.3);
+    }
+
+    .login-box h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--azul);
+      margin-bottom: 6px;
+    }
+
+    .login-box p {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 28px;
+    }
+
+    .login-campo {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .login-campo label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 7px;
+    }
+
+    .login-campo input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      color: #333;
+      background: #fafafa;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .login-campo input:focus {
+      outline: none;
+      border-color: var(--azul);
+      background: white;
+      box-shadow: 0 0 0 4px rgba(26,58,92,0.08);
+    }
+
+    .btn-login {
+      width: 100%;
+      background: var(--azul);
       color: white;
-      padding: 18px 20px;
-      border-radius: 12px 12px 0 0;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-login:hover { background: var(--azul-escuro); }
+    .btn-login:active { transform: scale(0.99); }
+
+    .login-erro {
+      display: none;
+      background: #ffebee;
+      border: 1px solid #ef9a9a;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #c62828;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    .login-rodape {
+      font-size: 11.5px;
+      color: #ccc;
+      margin-top: 20px;
+    }
+
+    /* ─── PAINEL ─── */
+    #painel { display: none; }
+
+    .wrapper { max-width: 1000px; margin: 0 auto; }
+
+    .topo {
+      background: var(--azul);
+      color: white;
+      padding: 18px 22px;
+      border-radius: 14px 14px 0 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
     }
 
-    .topo h1 { font-size: clamp(14px, 3vw, 18px); }
+    .topo-esq {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-    .topo span {
-      font-size: 13px;
+    .topo h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(14px, 3vw, 19px);
+    }
+
+    .topo-dir {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .topo span.badge-total {
+      font-size: 12.5px;
       background: rgba(255,255,255,0.15);
       padding: 6px 14px;
       border-radius: 20px;
     }
 
+    .btn-logout {
+      background: rgba(255,255,255,0.15);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 12.5px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover { background: rgba(255,255,255,0.25); }
+
     .card {
       background: white;
-      padding: 20px;
-      border-radius: 0 0 12px 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      padding: 22px;
+      border-radius: 0 0 14px 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     }
 
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
 
     .stat {
       background: #f5f7fa;
-      border-radius: 10px;
-      padding: 14px;
+      border-radius: 12px;
+      padding: 16px;
       text-align: center;
+      border: 1px solid #eee;
     }
 
     .stat strong {
       display: block;
-      font-size: clamp(20px, 5vw, 28px);
-      color: #1a3a5c;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 5vw, 30px);
+      color: var(--azul);
     }
 
-    .stat span { font-size: 12px; color: #888; }
+    .stat span { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
 
     .filtros {
       display: flex;
@@ -77,153 +241,200 @@
     }
 
     .filtros input, .filtros select {
-      padding: 9px 14px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+      padding: 10px 14px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 10px;
       font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
       background: #fafafa;
+      transition: border-color 0.2s;
       -webkit-appearance: none;
     }
 
+    .filtros input:focus, .filtros select:focus {
+      outline: none;
+      border-color: var(--azul);
+    }
+
     .filtros input { flex: 1; min-width: 160px; }
-    .filtros select { min-width: 140px; }
+    .filtros select { min-width: 150px; }
 
     .tabela-wrapper {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
+      border-radius: 10px;
+      border: 1px solid #eee;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
-      min-width: 700px;
+      min-width: 720px;
     }
 
     th {
       text-align: left;
-      padding: 10px 12px;
+      padding: 11px 14px;
       background: #f5f7fa;
       color: #555;
       font-weight: 600;
       border-bottom: 1px solid #eee;
       white-space: nowrap;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
     }
 
     td {
-      padding: 11px 12px;
-      border-bottom: 1px solid #f0f0f0;
+      padding: 12px 14px;
+      border-bottom: 1px solid #f2f2f2;
       color: #333;
       vertical-align: middle;
     }
 
-    tr:hover td { background: #fafafa; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafbff; }
 
     .badge {
       display: inline-block;
-      padding: 3px 10px;
+      padding: 4px 12px;
       border-radius: 20px;
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 600;
       white-space: nowrap;
     }
 
-    .badge.pendente { background: #fff8e1; color: #f9a825; }
+    .badge.pendente { background: #fff8e1; color: #f57f17; }
     .badge.emitido { background: #e8f5e9; color: #2e7d32; }
 
     .btn-status {
       background: none;
-      border: 1px solid #1a3a5c;
-      color: #1a3a5c;
-      border-radius: 6px;
-      padding: 5px 10px;
-      font-size: 11px;
+      border: 1.5px solid var(--azul);
+      color: var(--azul);
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
       cursor: pointer;
       white-space: nowrap;
       transition: all 0.2s;
+      font-weight: 500;
     }
 
-    .btn-status:hover { background: #1a3a5c; color: white; }
+    .btn-status:hover { background: var(--azul); color: white; }
 
     .vazio {
       text-align: center;
-      padding: 40px;
-      color: #aaa;
+      padding: 50px;
+      color: #bbb;
       font-size: 14px;
     }
 
     .rodape {
       text-align: center;
-      margin-top: 16px;
+      margin-top: 18px;
       font-size: 12px;
-      color: #aaa;
+      color: #bbb;
     }
   </style>
 </head>
 <body>
-  <div class="wrapper">
 
-    <div class="topo">
-      <h1>🏛️ OAB — Painel Administrativo</h1>
-      <span id="total-topo">Carregando...</span>
+  <!-- ─── TELA DE LOGIN ─── -->
+  <div id="tela-login">
+    <div class="login-box">
+      <div class="login-logo">🏛️</div>
+      <h2>Área Administrativa</h2>
+      <p>OAB — Painel de Certificados · Acesso restrito</p>
+
+      <div class="login-campo">
+        <label>Usuário</label>
+        <input type="text" id="login-usuario" placeholder="Digite seu usuário" autocomplete="username">
+      </div>
+      <div class="login-campo">
+        <label>Senha</label>
+        <input type="password" id="login-senha" placeholder="••••••••" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter') fazerLogin()">
+      </div>
+      <button class="btn-login" onclick="fazerLogin()">Entrar no painel</button>
+      <div class="login-erro" id="login-erro">❌ Usuário ou senha incorretos.</div>
+
+      <p class="login-rodape">OAB · 2026 · Área restrita</p>
     </div>
+  </div>
 
-    <div class="card">
+  <!-- ─── PAINEL ─── -->
+  <div id="painel">
+    <div class="wrapper">
 
-      <div class="stats">
-        <div class="stat">
-          <strong id="s-total">-</strong>
-          <span>Total</span>
+      <div class="topo">
+        <div class="topo-esq">
+          <span>🏛️</span>
+          <h1>OAB — Painel Administrativo</h1>
         </div>
-        <div class="stat">
-          <strong id="s-pendente">-</strong>
-          <span>Pendentes</span>
-        </div>
-        <div class="stat">
-          <strong id="s-emitido">-</strong>
-          <span>Emitidos</span>
+        <div class="topo-dir">
+          <span class="badge-total" id="total-topo">Carregando...</span>
+          <button class="btn-logout" onclick="fazerLogout()">Sair ↩</button>
         </div>
       </div>
 
-      <div class="filtros">
-        <input type="text" id="busca" placeholder="🔍 Buscar nome ou e-mail..." oninput="filtrar()">
-        <select id="filtro-status" onchange="filtrar()">
-          <option value="">Todos os status</option>
-          <option value="pendente">Pendente</option>
-          <option value="emitido">Emitido</option>
-        </select>
-        <select id="filtro-categoria" onchange="filtrar()">
-          <option value="">Todas categorias</option>
-          <option value="PALESTRANTE">Palestrante</option>
-          <option value="CONGRESSISTA">Congressista</option>
-        </select>
+      <div class="card">
+
+        <div class="stats">
+          <div class="stat">
+            <strong id="s-total">-</strong>
+            <span>Total</span>
+          </div>
+          <div class="stat">
+            <strong id="s-pendente">-</strong>
+            <span>Pendentes</span>
+          </div>
+          <div class="stat">
+            <strong id="s-emitido">-</strong>
+            <span>Emitidos</span>
+          </div>
+        </div>
+
+        <div class="filtros">
+          <input type="text" id="busca" placeholder="🔍 Buscar nome ou e-mail..." oninput="filtrar()">
+          <select id="filtro-status" onchange="filtrar()">
+            <option value="">Todos os status</option>
+            <option value="pendente">Pendente</option>
+            <option value="emitido">Emitido</option>
+          </select>
+          <select id="filtro-categoria" onchange="filtrar()">
+            <option value="">Todas categorias</option>
+            <option value="PALESTRANTE">Palestrante</option>
+            <option value="CONGRESSISTA">Congressista</option>
+          </select>
+        </div>
+
+        <div class="tabela-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
+                <th>Evento</th>
+                <th>Formato</th>
+                <th>Categoria</th>
+                <th>Data</th>
+                <th>Status</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody id="tabela"></tbody>
+          </table>
+        </div>
+
+        <div class="vazio" id="vazio" style="display:none">Nenhuma solicitação encontrada.</div>
+
       </div>
 
-      <div class="tabela-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>E-mail</th>
-              <th>Telefone</th>
-              <th>Evento</th>
-              <th>Formato</th>
-              <th>Categoria</th>
-              <th>Data</th>
-              <th>Status</th>
-              <th>Ação</th>
-            </tr>
-          </thead>
-          <tbody id="tabela"></tbody>
-        </table>
-      </div>
-
-      <div class="vazio" id="vazio" style="display:none">Nenhuma solicitação encontrada.</div>
-
+      <div class="rodape">OAB · 2026 · Área restrita</div>
     </div>
-
-    <div class="rodape">OAB · 2026 · Área restrita</div>
-
   </div>
 
   <script>
@@ -232,7 +443,44 @@
     const { createClient } = supabase
     const db = createClient(SUPABASE_URL, SUPABASE_KEY)
 
+    // ─── CREDENCIAIS (altere aqui) ───
+    const ADMIN_USER = 'admin'
+    const ADMIN_PASS = 'oab2026'
+
     let todos = []
+
+    function fazerLogin() {
+      const user = document.getElementById('login-usuario').value.trim()
+      const pass = document.getElementById('login-senha').value
+      const erro = document.getElementById('login-erro')
+
+      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        sessionStorage.setItem('oab_admin', '1')
+        document.getElementById('tela-login').style.display = 'none'
+        document.getElementById('painel').style.display = 'block'
+        carregar()
+      } else {
+        erro.style.display = 'block'
+        document.getElementById('login-senha').value = ''
+        document.getElementById('login-senha').focus()
+      }
+    }
+
+    function fazerLogout() {
+      sessionStorage.removeItem('oab_admin')
+      document.getElementById('tela-login').style.display = 'flex'
+      document.getElementById('painel').style.display = 'none'
+      document.getElementById('login-usuario').value = ''
+      document.getElementById('login-senha').value = ''
+      document.getElementById('login-erro').style.display = 'none'
+    }
+
+    // Verifica sessão ao carregar
+    if (sessionStorage.getItem('oab_admin') === '1') {
+      document.getElementById('tela-login').style.display = 'none'
+      document.getElementById('painel').style.display = 'block'
+      carregar()
+    }
 
     async function carregar() {
       const { data } = await db
@@ -305,11 +553,9 @@
       carregar()
     }
 
-    carregar()
-
     db.channel('certificados')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'certificados' },
-        () => carregar()
+        () => { if (sessionStorage.getItem('oab_admin') === '1') carregar() }
       ).subscribe()
   </script>
 
